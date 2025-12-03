@@ -1,16 +1,15 @@
 const mongoose = require("mongoose");
 
-// ---------------------
+
 // Todo Subschema
-// ---------------------
+
 const todoSchema = new mongoose.Schema({
   text: { type: String, required: true },
   completed: { type: Boolean, default: false },
 });
 
-// ---------------------
 // Main Task Schema
-// ---------------------
+
 const taskSchema = new mongoose.Schema(
   {
     title: { type: String, required: true },

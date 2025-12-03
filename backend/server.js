@@ -4,6 +4,7 @@ const path = require("path");
 const cors = require("cors");
 const connectDB = require("./config/db");
 const authRoutes=require("./routes/authRoutes")
+const userRoutes=require("./routes/userRoutes")
 const app = express();
 
 // Middleware to handle CORS
@@ -24,6 +25,7 @@ app.use(express.json());
 
 // Routing (add your routes here)
 app.use("/api/auth",authRoutes)
+app.use("/api/auth",userRoutes)
 
 // Server running
 const PORT = process.env.PORT || 5000;
