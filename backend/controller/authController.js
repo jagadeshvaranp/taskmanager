@@ -1,12 +1,12 @@
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { use } = require("react");
+// const { use } = require("react");
 
 //generate the token jwt
 
 const generateToken = (userId) => {
-  return jwt.sign({ id: userId }, process.env.JWT_SECRECT, { expiresIn: "7d" });
+  return jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: "7d" });
 };
 
 //@desc Register a new user
@@ -14,14 +14,15 @@ const generateToken = (userId) => {
 //@access public
 const registerUser = async (req, res) => {
   try {
-    const { name, email, password, profileImageUrl, adminInviteToken } = req.body;
+    const { name, email, password, profileImageUrl, adminInviteToken } =
+      req.body;
 
     const userExist = await User.findOne({ email });
     if (userExist) {
       return res.status(400).json({ message: "User already exists" });
     }
 
-     let role = "member";
+    let role = "member";
     if (
       adminInviteToken &&
       adminInviteToken === process.env.ADMIN_INVITE_TOKEN
@@ -29,7 +30,6 @@ const registerUser = async (req, res) => {
       role = "admin";
     }
 
-    
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
@@ -42,7 +42,6 @@ const registerUser = async (req, res) => {
       role,
     });
 
-
     res.status(201).json({
       _id: user._id,
       name: user.name,
@@ -52,16 +51,13 @@ const registerUser = async (req, res) => {
       token: generateToken(user._id), // JWT
     });
     res.json({ message: "Register API Working" });
-
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
 
-
-
 //@desc login a user
-//@route post the /api/auth /login 
+//@route post the /api/auth /login
 //@access public
 const loginUser = async (req, res) => {
   try {
@@ -88,7 +84,6 @@ const loginUser = async (req, res) => {
       profileImageUrl: user.profileImageUrl,
       token: generateToken(user._id),
     });
-    
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
   }
@@ -99,12 +94,14 @@ const loginUser = async (req, res) => {
 //@access private (requires jwt)
 const getUserProfile = async (req, res) => {
   try {
-    const user=await User.findById(req.user.id).select("-password")
-    if(!user){return res.status(404).json({message:"user not found"})}
+    const user = await User.findById(req.user.id).select("-password");
+    if (!user) {
+      return res.status(404).json({ message: "user not found" });
+    }
   } catch (err) {
     res.status(500).json({ message: "server error", error: error.message });
   }
-  res.json(user)
+  res.json(user);
 };
 
 //@desc update user profile
@@ -113,7 +110,7 @@ const getUserProfile = async (req, res) => {
 
 const UpdateUserProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id); 
+    const user = await User.findById(req.user.id);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -138,7 +135,6 @@ const UpdateUserProfile = async (req, res) => {
       role: updatedUser.role,
       token: generateToken(updatedUser._id),
     });
-
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
   }

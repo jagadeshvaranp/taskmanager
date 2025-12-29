@@ -1,16 +1,23 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
-//middleware is product only routs
-//this file is use the middleware of authentication
+// Middleware to protect routes (Authentication)
 const protect = async (req, res, next) => {
   try {
-    let token = req.headers.authorization;
-    if (token && token.startsWith("Bearer")) {
-      token = token.split(" ")[1]; // Extract actual token
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    let token;
+    if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
+      token = req.headers.authorization.split(" ")[1];
+
+      
+      const secret = process.env.JWT_SECRET; 
+
+      if (!secret) {
+        return res.status(500).json({ message: "Server configuration error: Secret not found" });
+      }
+
+      const decoded = jwt.verify(token, secret);
       req.user = await User.findById(decoded.id).select("-password");
-      next(); // Allow request to continue
+      next();
     } else {
       res.status(401).json({ message: "Not authorized, no token" });
     }
@@ -19,16 +26,15 @@ const protect = async (req, res, next) => {
   }
 };
 
-
-//middleware for admin-only to access
-
-const adminonly = async (req, res) => {
+// Middleware for admin-only access (Authorization)
+const adminonly = (req, res, next) => { // Added 'next' here!
+  // Checks if user exists and if their role is admin
   if (req.user && req.user.role === "admin") {
-    next();
+    next(); // Gate opens, request goes to Controller
   } else {
-    res.status(404).json({ message: "Access denied,admin only" });
+    // Usually, 403 Forbidden is better than 404 here
+    res.status(403).json({ message: "Access denied, admin only" });
   }
 };
 
-
-module.exports={protect,adminonly}
+module.exports = { protect, adminonly };
