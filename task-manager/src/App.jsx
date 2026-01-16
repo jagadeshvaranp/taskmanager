@@ -16,6 +16,7 @@ import ViewTaskDetails from "./pages/User/ViewTaskDetails";
 import PrivateRoute from "./routes/PrivateRoute";
 import UserProvider, { UserContext } from "./context/userContext";
 import { Toaster } from "react-hot-toast";
+
 function App() {
   return (
     <UserProvider>
@@ -34,7 +35,8 @@ function App() {
 
           {/* User Protected Routes */}
           <Route element={<PrivateRoute allowedRoles={["member"]} />}>
-            <Route path="/user/mytask" element={<MyTask />} />
+            {/* CORRECTED: Changed "/user/mytask" to "/user/tasks" to match your error URL */}
+            <Route path="/user/tasks" element={<MyTask />} />
             <Route path="/user/dashboard" element={<UserDashboard />} />
             <Route path="/user/task-detail/:id" element={<ViewTaskDetails />} />
           </Route>
@@ -44,13 +46,10 @@ function App() {
         </Routes>
 
         <Toaster
-          position="top-right"
           toastOptions={{
             className: 'text-sm font-medium',
             style: {
-              borderRadius: '8px',
-              background: '#333',
-              color: '#fff',
+              fontSize: "13px"
             },
           }}
         />
@@ -62,7 +61,7 @@ function App() {
 export default App;
 
 const Root = () => {
-  const { user, loading } = useContext(UserContext); 
+  const { user, loading } = useContext(UserContext);
 
   if (loading) return <Outlet />;
 

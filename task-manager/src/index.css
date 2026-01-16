@@ -53,3 +53,15 @@
 .card-btn-fill{
 @apply flex items-center gap-3 text-xs font-medium text-white bg-blue-600 hover:bg-gray-50 hover:text-blue-600 px-4 py-2 rounded-lg border border-gray-200 transition-all shadow-sm hover:shadow-md cursor-pointer;
 }
+
+.add-btn {
+  @apply w-full flex items-center justify-center gap-1.5 text-xs md:text-sm font-medium text-blue-600 whitespace-normal bg-blue-50 border border-blue-100 rounded-lg px-4 py-3 cursor-pointer;
+}
+
+.download-btn{
+  @apply items-center gap-3 text-xs md:text-[13px]  bg-lime-100 px-2 md:px-3 py-2 rounded border-lime-200 hover:border-lime-400 cursor-pointer
+}
+
+.user-card{
+  @apply bg-white p-4 rounded-xl shadow-md shadow-gray-100 border border-gray-200/50
+}
