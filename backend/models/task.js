@@ -1,15 +1,12 @@
 const mongoose = require("mongoose");
 
-
 // Todo Subschema
-
 const todoSchema = new mongoose.Schema({
-  text: { type: String, required: true },
-  completed: { type: Boolean, default: false },
+  text: { type: String, required: true }, // Schema expects 'text'
+  completed: { type: Boolean, default: false }, // Schema expects 'completed'
 });
 
 // Main Task Schema
-
 const taskSchema = new mongoose.Schema(
   {
     title: { type: String, required: true },
@@ -29,10 +26,11 @@ const taskSchema = new mongoose.Schema(
 
     dueDate: { type: Date, required: true },
 
-    assignedTo: {
+    // 🟢 FIXED: Wrapped in [ ] to allow multiple users
+    assignedTo: [{ 
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-    },
+    }],
 
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
@@ -48,6 +46,5 @@ const taskSchema = new mongoose.Schema(
 
   { timestamps: true }
 );
-
 
 module.exports = mongoose.model("Task", taskSchema);
