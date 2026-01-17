@@ -29,16 +29,12 @@ jobs:
         with:
           node-version: '20'
 
-      # --- DEBUG STEP (This will show us exactly what your folders are named) ---
-      - name: List Files
-        run: ls -R
-        
-      # FIX 1: Install
+      # FIX 1: Go into the folder to install
       - name: Install dependencies
         run: npm ci
         working-directory: ./task-manager
 
-      # FIX 2: Build
+      # FIX 2: Go into the folder to build
       - name: Build React app
         run: npm run build
         working-directory: ./task-manager
@@ -49,6 +45,7 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-pages-artifact@v3
         with:
+          # FIX 3: Upload the 'dist' folder from inside 'task-manager'
           path: ./task-manager/dist
 
       - name: Deploy to GitHub Pages
