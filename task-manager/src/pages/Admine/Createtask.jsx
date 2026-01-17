@@ -12,7 +12,7 @@ import SelectUser from "../../component/input/SelectUser";
 import TodoListInput from "../../component/input/TodoListInput";
 import AddAttachmentInput from "../../component/input/AddAttachmentInput";
 
-function Createtask() {
+function CreateTask() {
   const location = useLocation();
   const { taskId } = location.state || {};
   const navigate = useNavigate();
@@ -334,4 +334,4 @@ function Createtask() {
   );
 }
 
-export default Createtask;
+export default CreateTask;
