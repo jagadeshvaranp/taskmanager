@@ -4,8 +4,8 @@ import { BrowserRouter, Routes, Route, Outlet, Navigate } from "react-router-dom
 import Login from "./pages/Auth/Login";
 import Signup from "./pages/Auth/Signup";
 
-import Dashboard from "./pages/Admine/Dashboard";
-import Createtask from "./pages/Admine/CreateTask";
+import Dashboard from "./pages/admine/Dashboard";
+import CreateTask from "./pages/admine/CreateTask";
 import ManagerTask from "./pages/admine/ManagerTask";
 import MangerUser from "./pages/admine/MangerUser";
 
@@ -28,7 +28,7 @@ function App() {
           {/* Admin Protected Routes */}
           <Route element={<PrivateRoute allowedRoles={["admin"]} />}>
             <Route path="/admin/dashboard" element={<Dashboard />} />
-            <Route path="/admin/create-task" element={<Createtask />} />
+            <Route path="/admin/create-task" element={<CreateTask />} />
             <Route path="/admin/tasks" element={<ManagerTask />} />
             <Route path="/admin/users" element={<MangerUser />} />
           </Route>
