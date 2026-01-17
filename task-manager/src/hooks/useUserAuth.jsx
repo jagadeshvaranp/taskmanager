@@ -16,4 +16,4 @@ export const useUserAuth = () => {
   }, [user, loading, clearUser, navigate]);
 
   return { user, loading };
-};
+}
