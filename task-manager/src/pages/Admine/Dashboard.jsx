@@ -7,7 +7,7 @@ import axiosInstance from "../../utils/axiosintance";
 import { API_PATHS } from "../../utils/Apipaths";
 import { addThousandsSeparator } from "../../utils/helper";
 import { useUserAuth } from "../../hooks/useUserAuth";
-import { UserContext } from "../../context/userContext";
+import { UserContext } from "../../context/userContext"
 
 // Components
 import CustomPieChart from "../../component/charts/CustomPieChart";
