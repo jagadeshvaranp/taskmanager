@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import DashboardLayout from "../../component/layouts/DashboardLayout";
 import { PRIORITY_DATA } from "../../utils/data";
-import axiosInstance from "../../utils/axiosintance";
+import axiosInstance from "../../utils/axiosintance"; // CHECK: Ensure file name matches exactly
 import { API_PATHS } from "../../utils/Apipaths";
 import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -23,30 +23,16 @@ function CreateTask() {
     priority: "Low",
     dueDate: null,
     assignedTo: [],
-    todoChecklist: [],
+    todoChecklist: [], // We need to store full objects here, not just strings, to save state
     attachments: [],
   });
 
-  // FIXED: Changed setcurrentTask to setCurrentTask to match usage
-  const [currentTask, setCurrentTask] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [openDeleteAlert, setOpenDeleteAlert] = useState(false);
+  // REMOVED: Unused state 'openDeleteAlert'
 
-  const handlevalueChange = (key, value) => {
+  const handleValueChange = (key, value) => {
     setTaskData((prevData) => ({ ...prevData, [key]: value }));
-  };
-
-  const clearData = () => {
-    setTaskData({
-      title: "",
-      description: "",
-      priority: "Low",
-      dueDate: null,
-      assignedTo: [],
-      todoChecklist: [],
-      attachments: [],
-    });
   };
 
   // --- API ACTIONS ---
@@ -55,10 +41,12 @@ function CreateTask() {
   const createTask = async () => {
     setLoading(true);
     try {
-      const todolist = taskData.todoChecklist?.map((item) => ({
-        text: item,
-        completed: false,
-      }));
+      // Map strings to objects for the API
+      const todolist = taskData.todoChecklist?.map((item) => {
+        // Handle if item is already an object (from update) or a string (new input)
+        if (typeof item === 'object') return item; 
+        return { text: item, completed: false };
+      });
 
       await axiosInstance.post(API_PATHS.TASKS.CREATE_TASK, {
         ...taskData,
@@ -67,8 +55,7 @@ function CreateTask() {
       });
 
       toast.success("Task Created Successfully");
-      clearData();
-      navigate(-1); // Go back to previous page
+      navigate(-1);
     } catch (error) {
       console.error("Error creating task", error);
       toast.error("Failed to create task");
@@ -81,23 +68,34 @@ function CreateTask() {
   const updateTask = async () => {
     setLoading(true);
     try {
-      const todolist = taskData.todoChecklist?.map((item) => ({
-        text: item,
-        // Note: This resets 'completed' to false on edit. 
-        // If you need to persist status, you need to map currentTask.todoChecklist logic here.
-        completed: false, 
-      }));
+      // FIX: preserve the 'completed' status if it exists
+      const todolist = taskData.todoChecklist?.map((item) => {
+        // If it's already an object (preserved from GET), keep it. 
+        // If it's a new string added during edit, make it an object.
+        if (typeof item === 'object') {
+            return item; 
+        }
+        return { text: item, completed: false };
+      });
 
-      // Assuming your API path for update is TASKS.UPDATE_TASK(taskId) or similar
-      // If not, replace with `API_PATHS.TASKS.CREATE_TASK + "/" + taskId`
-      await axiosInstance.put(API_PATHS.TASKS.UPDATE_TASK(taskId), { 
+      // CHECK: Ensure API_PATHS.TASKS.UPDATE_TASK is a function accepting ID, 
+      // OR use string concatenation: `${API_PATHS.TASKS.UPDATE_TASK}/${taskId}`
+      let url = API_PATHS.TASKS.UPDATE_TASK;
+      if (typeof API_PATHS.TASKS.UPDATE_TASK === 'function') {
+         url = API_PATHS.TASKS.UPDATE_TASK(taskId);
+      } else {
+         // Fallback if your Apipaths.js defines it as a string
+         url = url + "/" + taskId; 
+      }
+
+      await axiosInstance.put(url, { 
         ...taskData,
         dueDate: new Date(taskData.dueDate).toISOString(),
         todoChecklist: todolist,
       });
 
       toast.success("Task Updated Successfully");
-      navigate(-1); // Go back after update
+      navigate(-1);
     } catch (error) {
       console.error("Error updating task", error);
       toast.error("Failed to update task");
@@ -108,15 +106,21 @@ function CreateTask() {
 
   // 3. Delete Task
   const deleteTask = async () => {
-    // Optional: Add a standard confirm if you don't have a custom modal ready
     if (!window.confirm("Are you sure you want to delete this task?")) return;
     
     setLoading(true);
     try {
-      // Assuming your API path for delete is TASKS.DELETE_TASK(taskId)
-      await axiosInstance.delete(API_PATHS.TASKS.DELETE_TASK(taskId));
+      // Same check for URL generation
+      let url = API_PATHS.TASKS.DELETE_TASK;
+      if (typeof API_PATHS.TASKS.DELETE_TASK === 'function') {
+         url = API_PATHS.TASKS.DELETE_TASK(taskId);
+      } else {
+         url = url + "/" + taskId; 
+      }
+
+      await axiosInstance.delete(url);
       toast.success("Task Deleted Successfully");
-      navigate(-1); // Go back after delete
+      navigate(-1);
     } catch (error) {
       console.error("Error deleting task", error);
       toast.error("Failed to delete task");
@@ -128,14 +132,17 @@ function CreateTask() {
   // 4. Get Task Details
   const getTaskDetailsByID = async (id) => {
     try {
-      const response = await axiosInstance.get(API_PATHS.TASKS.GET_TASK_BY_ID(id));
+      // Ensure URL handling matches your API_PATHS structure
+      let url = API_PATHS.TASKS.GET_TASK_BY_ID;
+      if (typeof url === 'function') url = url(id);
+      else url = url + "/" + id;
+
+      const response = await axiosInstance.get(url);
 
       if (response.data) {
         const taskInfo = response.data;
-        setCurrentTask(taskInfo); // FIXED: Variable name matches state setter
 
-        setTaskData((prevState) => ({
-          ...prevState,
+        setTaskData({
           title: taskInfo.title,
           description: taskInfo.description,
           priority: taskInfo.priority,
@@ -143,10 +150,12 @@ function CreateTask() {
             ? moment(taskInfo.dueDate).format("YYYY-MM-DD")
             : null,
           assignedTo: taskInfo?.assignedTo?.map((item) => item?._id) || [],
-          // Assuming backend returns objects, we map to strings for the input
-          todoChecklist: taskInfo?.todoChecklist?.map((item) => item?.text) || [],
+          // FIX: Don't map to text only! Keep the object to preserve 'completed' status
+          // If your TodoListInput component ONLY accepts strings, you will need to refactor that component.
+          // Assuming TodoListInput can handle objects or strings:
+          todoChecklist: taskInfo?.todoChecklist || [], 
           attachments: taskInfo?.attachments || [],
-        }));
+        });
       }
     } catch (error) {
       console.error("Error fetching task details:", error);
@@ -154,11 +163,9 @@ function CreateTask() {
     }
   };
 
-  // Handle Form Submit
   const handleSubmit = async () => {
     setError(null);
     
-    // Validation
     if (!taskData.title.trim()) {
       setError("Title is required");
       return;
@@ -175,11 +182,6 @@ function CreateTask() {
       setError("Task not assigned to any member");
       return;
     }
-    // Optional: Check if at least one todo item exists
-    if (taskData.todoChecklist?.length === 0) {
-      setError("Add at least one todo list item");
-      return;
-    }
 
     if (taskId) {
       await updateTask();
@@ -192,7 +194,7 @@ function CreateTask() {
     if (taskId) {
       getTaskDetailsByID(taskId);
     }
-  }, [taskId]); // FIXED: Dependency only needs taskId
+  }, [taskId]);
 
   return (
     <DashboardLayout activeMenu="Create Task">
@@ -214,7 +216,6 @@ function CreateTask() {
               )}
             </div>
             
-            {/* Title Input */}
             <div className="mt-4">
               <label className="text-xs font-medium text-slate-600">
                 Task Title
@@ -224,12 +225,11 @@ function CreateTask() {
                 className="form-input"
                 value={taskData.title}
                 onChange={({ target }) =>
-                  handlevalueChange("title", target.value)
+                  handleValueChange("title", target.value)
                 }
               />
             </div>
 
-            {/* Description Input */}
             <div className="mt-3">
               <label className="text-xs font-medium text-slate-600">
                 Description
@@ -240,12 +240,11 @@ function CreateTask() {
                 rows={4}
                 value={taskData.description}
                 onChange={({ target }) => {
-                  handlevalueChange("description", target.value);
+                  handleValueChange("description", target.value);
                 }}
               />
             </div>
 
-            {/* Grid for Priority, Date, Assignee */}
             <div className="grid grid-cols-12 gap-4 mt-3">
               <div className="col-span-6 md:col-span-4">
                 <label className="text-xs font-medium text-slate-600">
@@ -254,7 +253,7 @@ function CreateTask() {
                 <SelectDropdown
                   options={PRIORITY_DATA}
                   value={taskData.priority}
-                  onChange={(value) => handlevalueChange("priority", value)}
+                  onChange={(value) => handleValueChange("priority", value)}
                   placeholder="Select priority"
                 />
               </div>
@@ -267,7 +266,7 @@ function CreateTask() {
                   className="form-input"
                   value={taskData.dueDate || ""}
                   onChange={({ target }) =>
-                    handlevalueChange("dueDate", target.value)
+                    handleValueChange("dueDate", target.value)
                   }
                   type="date"
                 />
@@ -280,13 +279,12 @@ function CreateTask() {
                 <SelectUser
                   selectedUsers={taskData.assignedTo || []}
                   setSelectedUsers={(value) => {
-                    handlevalueChange("assignedTo", value);
+                    handleValueChange("assignedTo", value);
                   }}
                 />
               </div>
             </div>
 
-            {/* Todo List */}
             <div className="mt-3">
               <label className="text-xs font-medium text-slate-600">
                 ToDo Checklist
@@ -294,12 +292,11 @@ function CreateTask() {
               <TodoListInput
                 todoList={taskData?.todoChecklist || []}
                 setTodoList={(value) =>
-                  handlevalueChange("todoChecklist", value)
+                  handleValueChange("todoChecklist", value)
                 }
               />
             </div>
 
-            {/* Attachments */}
             <div className="mt-3">
               <label className="text-xs font-medium text-slate-600">
                 Add Attachment
@@ -307,17 +304,15 @@ function CreateTask() {
               <AddAttachmentInput
                 attachments={taskData?.attachments || []}
                 setAttachment={(value) =>
-                  handlevalueChange("attachments", value)
+                  handleValueChange("attachments", value)
                 }
               />
             </div>
 
-            {/* Error Message */}
             {error && (
               <p className="text-xs font-medium text-red-500 mt-5">{error}</p>
             )}
 
-            {/* Submit Button */}
             <div className="flex justify-end mt-7">
               <button 
                 className="add-btn" 
