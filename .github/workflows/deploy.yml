@@ -29,12 +29,12 @@ jobs:
         with:
           node-version: '20'
 
-      # FIX 1: This was missing! It tells npm where to find package.json
+      # FIX 1: This tells the runner to go into your folder first
       - name: Install dependencies
         run: npm ci
         working-directory: ./task-manager
 
-      # FIX 2: This was missing! It tells npm where to build
+      # FIX 2: This tells the runner to build inside your folder
       - name: Build React app
         run: npm run build
         working-directory: ./task-manager
@@ -45,7 +45,7 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # FIX 3: Upload the correct folder
+          # FIX 3: Upload the 'dist' folder from inside 'task-manager'
           path: ./task-manager/dist
 
       - name: Deploy to GitHub Pages
