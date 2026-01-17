@@ -57,7 +57,8 @@ function SideMenu({ activeMenu }) {
                 )}
 
                 <h5 className='text-gray-950 font-medium leading-6 mt-3'>
-                    {user?.fullName || "User"}
+                    {/* UPDATED: Checks for fullName, OR name, before defaulting to "User" */}
+                    {user?.fullName || user?.name || "User"}
                 </h5>
 
                 <p className='text-[12px] text-gray-500'>
