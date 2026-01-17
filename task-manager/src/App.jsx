@@ -7,7 +7,7 @@ import Signup from "./pages/Auth/Signup";
 import Dashboard from "./pages/Admine/Dashboard";
 import CreateTask from "./pages/admine/CreateTask";
 import ManagerTask from "./pages/admine/ManagerTask";
-import MangerUser from "./pages/admine/MangerUser";
+import ManagerUser from "./pages/admine/ManagerUser"; // ✅ Correct spelling
 
 import MyTask from "./pages/User/Mytask";
 import UserDashboard from "./pages/User/UserDashboard";
@@ -30,7 +30,7 @@ function App() {
             <Route path="/admin/dashboard" element={<Dashboard />} />
             <Route path="/admin/create-task" element={<CreateTask />} />
             <Route path="/admin/tasks" element={<ManagerTask />} />
-            <Route path="/admin/users" element={<MangerUser />} />
+            <Route path="/admin/users" element={<ManagerUser />} />
           </Route>
 
           {/* User Protected Routes */}
