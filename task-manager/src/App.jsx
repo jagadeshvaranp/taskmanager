@@ -5,9 +5,9 @@ import Login from "./pages/Auth/Login";
 import Signup from "./pages/Auth/Signup";
 
 import Dashboard from "./pages/Admine/Dashboard";
-import CreateTask from "./pages/admine/CreateTask";
-import ManagerTask from "./pages/admine/ManagerTask";
-import ManagerUser from "./pages/admine/ManagerUser"; // ✅ Correct spelling
+import CreateTask from "./pages/Admine/CreateTask";
+import ManagerTask from "./pages/Admine/ManagerTask";
+import ManagerUser from "./pages/Admine/ManagerUser"; // ✅ Correct spelling
 
 import MyTask from "./pages/User/Mytask";
 import UserDashboard from "./pages/User/UserDashboard";
