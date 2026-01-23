@@ -20,7 +20,7 @@ import { Toaster } from "react-hot-toast";
 function App() {
   return (
     <UserProvider>
-      <BrowserRouter basename="/taskmanager">
+      <BrowserRouter >
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
