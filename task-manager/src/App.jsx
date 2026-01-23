@@ -7,7 +7,7 @@ import Signup from "./pages/Auth/Signup";
 import Dashboard from "./pages/Admine/Dashboard";
 import CreateTask from "./pages/Admine/CreateTask";
 import ManagerTask from "./pages/Admine/ManagerTask";
-import ManagerUser from "./pages/Admine/ManagerUser"; // ✅ Correct spelling
+import ManagerUser from "./pages/Admine/ManagerUser";
 
 import MyTask from "./pages/User/Mytask";
 import UserDashboard from "./pages/User/UserDashboard";
@@ -20,7 +20,8 @@ import { Toaster } from "react-hot-toast";
 function App() {
   return (
     <UserProvider>
-      <BrowserRouter >
+      {/* ✅ FIX: Removed basename="/taskmanager" for Vercel */}
+      <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
@@ -35,7 +36,6 @@ function App() {
 
           {/* User Protected Routes */}
           <Route element={<PrivateRoute allowedRoles={["member"]} />}>
-            {/* CORRECTED: Changed "/user/mytask" to "/user/tasks" to match your error URL */}
             <Route path="/user/tasks" element={<MyTask />} />
             <Route path="/user/dashboard" element={<UserDashboard />} />
             <Route path="/user/task-detail/:id" element={<ViewTaskDetails />} />
