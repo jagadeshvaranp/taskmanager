@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route, Outlet, Navigate } from "react-router-dom
 import Login from "./pages/Auth/Login";
 import Signup from "./pages/Auth/Signup";
 
-const Dashboard = lazy(() => import('./pages/Admine/Dashboard'));
+import Dashboard from "./pages/Admine/Dashboard";
 import CreateTask from "./pages/Admine/CreateTask";
 import ManagerTask from "./pages/Admine/ManagerTask";
 import ManagerUser from "./pages/Admine/ManagerUser";
@@ -27,14 +27,13 @@ function App() {
           <Route path="/signup" element={<Signup />} />
 
           {/* Admin Protected Routes */}
-          <Suspense fallback={<div>Loading...</div>}>
           <Route element={<PrivateRoute allowedRoles={["admin"]} />}>
             <Route path="/admin/dashboard" element={<Dashboard />} />
             <Route path="/admin/create-task" element={<CreateTask />} />
             <Route path="/admin/tasks" element={<ManagerTask />} />
             <Route path="/admin/users" element={<ManagerUser />} />
           </Route>
-          </Suspense>
+
           {/* User Protected Routes */}
           <Route element={<PrivateRoute allowedRoles={["member"]} />}>
             <Route path="/user/tasks" element={<MyTask />} />
