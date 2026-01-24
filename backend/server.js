@@ -22,10 +22,11 @@ app.use(
 
 // MongoDB connection
 connectDB();
-// console.log("MONGO_URL =", process.env.MONGO_URL); // Good for debugging, remove for production
+console.log("MONGO_URL =", process.env.MONGO_URL);
 
 // Body parser
 app.use(express.json());
+console.log("SECRET CHECK:", process.env.JWT_SECRET);
 
 // Routes
 app.use("/api/auth", authRoutes);
@@ -33,24 +34,17 @@ app.use("/api/users", userRoutes);
 app.use("/api/tasks", taskRoutes);
 app.use("/api/reports", reportRoutes);
 
-// NOTE: Vercel does not support persistent file uploads to the local disk.
-// If you are using Cloudinary, you don't need this line.
-// app.use("/uploads", express.static(path.join(__dirname, "uploads"))); 
+// Static uploads folder
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// Test Route
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
 
-// Server Setup for Vercel
+// Server
 const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
 
-// Only run the server manually if NOT in Vercel (Local Development)
-if (require.main === module) {
-  app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-  });
-}
-
-// Export the app for Vercel Serverless Functions
-module.exports = app;
+module.exports = app
