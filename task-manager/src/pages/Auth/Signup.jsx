@@ -23,7 +23,7 @@ function Signup() {
   const handleSignup = async (e) => {
     e.preventDefault();
     setError("");
-
+// Form Validations
     if (!fullName) return setError("Please enter full name");
     if (!validateEmail(email)) return setError("Please enter valid email");
     if (!password) return setError("Please enter password");
