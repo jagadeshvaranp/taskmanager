@@ -37,6 +37,10 @@ app.use("/api/reports", reportRoutes);
 // Static uploads folder
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
+app.get("/", (req, res) => {
+  res.send("API is running...");
+});
+
 // Server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
