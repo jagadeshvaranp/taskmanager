@@ -11,22 +11,22 @@ const reportRoutes = require("./routes/reportRoutes");
 
 const app = express();
 
-// CORS middleware
+// 1. UPDATED CORS CONFIGURATION
+// We use a function for origin to allow multiple origins (your deployed frontend + localhost)
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "*",
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    origin: ["https://taskmanager-frontend-one.vercel.app", "http://localhost:5173", "http://localhost:3000"], 
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Added OPTIONS
     allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true 
   })
 );
 
 // MongoDB connection
 connectDB();
-console.log("MONGO_URL =", process.env.MONGO_URL);
 
 // Body parser
 app.use(express.json());
-console.log("SECRET CHECK:", process.env.JWT_SECRET);
 
 // Routes
 app.use("/api/auth", authRoutes);
@@ -41,10 +41,14 @@ app.get("/", (req, res) => {
   res.send("API is running...");
 });
 
-// Server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+// 2. EXPORT THE APP FOR VERCEL
+// Vercel needs 'module.exports = app' to run serverless.
+// We only run app.listen if we are NOT in production (or specifically locally).
+if (process.env.NODE_ENV !== 'production') {
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+}
 
-module.exports = app
+module.exports = app;
