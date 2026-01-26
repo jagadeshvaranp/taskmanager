@@ -1,5 +1,7 @@
-export const BASE_URL = "http://localhost:5000";
+// ✅ CORRECT: Direct link to your deployed backend (No slash at the end)
+export const BASE_URL = "https://taskmanager-backend-one.vercel.app";
 
+// Your paths remain the same (they already have the slash at the start)
 export const API_PATHS = {
   AUTH: {
     REGISTER: `${BASE_URL}/api/auth/register`,
@@ -16,7 +18,6 @@ export const API_PATHS = {
   },
 
   TASKS: {
-    // I have added ${BASE_URL} to all these paths:
     GET_DASHBOARD_DATA: `${BASE_URL}/api/tasks/dashboard-data`,
     GET_USER_DASHBOARD_DATA: `${BASE_URL}/api/tasks/user-dashboard-data`,
     GET_ALL_TASKS: `${BASE_URL}/api/tasks`,
