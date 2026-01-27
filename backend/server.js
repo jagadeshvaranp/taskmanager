@@ -14,8 +14,8 @@ const app = express();
 // 1. UPDATED CORS CONFIGURATION
 // We use a function for origin to allow multiple origins (your deployed frontend + localhost)
 app.use(cors({
-    origin: ["https://taskloop-phi.vercel.app/", "http://localhost:5000"], // REPLACE with your actual Frontend URL
-    methods: ["POST", "GET", "PUT", "DELETE", "OPTIONS"],
+    origin: ["https://taskloop-phi.vercel.app/"], // REPLACE with your actual Frontend URL
+    methods: ["POST", "GET"],
     credentials: true
 }));
 
