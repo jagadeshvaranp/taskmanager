@@ -13,14 +13,11 @@ const app = express();
 
 // 1. UPDATED CORS CONFIGURATION
 // We use a function for origin to allow multiple origins (your deployed frontend + localhost)
-app.use(
-  cors({
-    origin: ["https://taskloop-phi.vercel.app", "http://localhost:5173", "http://localhost:3000"], 
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Added OPTIONS
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true 
-  })
-);
+app.use(cors({
+    origin: ["https://taskloop-phi.vercel.app/", "http://localhost:5000"], // REPLACE with your actual Frontend URL
+    methods: ["POST", "GET", "PUT", "DELETE", "OPTIONS"],
+    credentials: true
+}));
 
 // MongoDB connection
 connectDB();

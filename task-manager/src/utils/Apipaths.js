@@ -1,5 +1,5 @@
 // ✅ CORRECT: Direct link to your deployed backend (No slash at the end)
-export const BASE_URL = "https://taskmanager-backend-one.vercel.app";
+export const BASE_URL = "http://localhost:5000";
 
 // Your paths remain the same (they already have the slash at the start)
 export const API_PATHS = {
