@@ -12,16 +12,26 @@ const reportRoutes = require("./routes/reportRoutes");
 const app = express();
 
 // 1. UPDATED CORS CONFIGURATION
-// We use a function for origin to allow multiple origins (your deployed frontend + localhost)
 app.use(
   cors({
-   
     origin: ["https://taskloop-phi.vercel.app", "http://localhost:5173", "http://localhost:3000"], 
-    // Added OPTIONS
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true 
   })
 );
+
+// --- ADD THIS BLOCK HERE TO FIX THE CHROME ERROR ---
+app.use((req, res, next) => {
+  // Allows the browser to proceed with local network requests
+  res.header('Access-Control-Allow-Private-Network', 'true');
+  
+  // Handle Preflight (OPTIONS) requests
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(204);
+  }
+  next();
+});
+// --- END OF FIX ---
 
 // MongoDB connection
 connectDB();
@@ -43,11 +53,10 @@ app.get("/", (req, res) => {
 });
 
 // 2. EXPORT THE APP FOR VERCEL
-// Vercel needs 'module.exports = app' to run serverless.
-// We only run app.listen if we are NOT in production (or specifically locally).
 if (process.env.NODE_ENV !== 'production') {
     const PORT = process.env.PORT || 5000;
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
     });
 }
+module.exports = app;
