@@ -12,15 +12,10 @@ const reportRoutes = require("./routes/reportRoutes");
 const app = express();
 
 // 1. UPDATED CORS CONFIGURATION
-app.use(
-  cors({
-    // Allow your specific frontend URLs
-    origin: ["http://localhost:5173"], 
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true
-  })
-);
+app.use(cors({
+  origin: ["http://localhost:5173"], 
+  credentials: true
+}));
 
 // --- ADD THIS BLOCK HERE TO FIX THE CHROME ERROR ---
 app.use((req, res, next) => {
