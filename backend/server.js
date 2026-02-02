@@ -15,10 +15,10 @@ const app = express();
 app.use(
   cors({
     // Allow your specific frontend URLs
-    origin: ["https://taskloop-phi.vercel.app"]
-    // methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    // allowedHeaders: ["Content-Type", "Authorization"],
-    // credentials: true
+    origin: ["http://localhost:5173"], 
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true
   })
 );
 
