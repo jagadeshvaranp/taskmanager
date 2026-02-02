@@ -16,7 +16,7 @@ const corsOptions = {
   origin: "https://taskloop-ivory.vercel.app", // No trailing slash here either!
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
   credentials: true,
-  optionsSuccessStatus: 200 // Some legacy browsers choke on 204
+optionsSuccessStatus: 200// Some legacy browsers choke on 204
 };
 
 app.use(cors(corsOptions));
@@ -46,7 +46,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/tasks", taskRoutes);
 app.use("/api/reports", reportRoutes);
-app.options('*', cors(corsOptions));
+app.options(/(.*)/, cors(corsOptions));
 // Static uploads folder
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
