@@ -3,6 +3,7 @@ import { BASE_URL } from "./Apipaths";
 
 const axiosInstance = axios.create({
   baseURL: BASE_URL,
+  withCredentials: true,
   timeout: 10000,
 });
 
