@@ -55,10 +55,6 @@ app.get("/", (req, res) => {
 });
 
 // 2. EXPORT THE APP FOR VERCEL
-if (process.env.NODE_ENV !== 'production') {
-    const PORT = process.env.PORT || 5000;
-    app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
-    });
-}
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Listening on ${PORT}`));
 module.exports = app;
