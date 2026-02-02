@@ -26,7 +26,7 @@ const taskSchema = new mongoose.Schema(
 
     dueDate: { type: Date, required: true },
 
-    // 🟢 FIXED: Wrapped in [ ] to allow multiple users
+    
     assignedTo: [{ 
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

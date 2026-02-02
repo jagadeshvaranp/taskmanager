@@ -12,10 +12,10 @@ const reportRoutes = require("./routes/reportRoutes");
 const app = express();
 
 // 1. UPDATED CORS CONFIGURATION
-// We use a function for origin to allow multiple origins (your deployed frontend + localhost)
+// Allow multiple origins if needed
 app.use(cors({
-    origin: ["https://taskloop-phi.vercel.app/"], // REPLACE with your actual Frontend URL
-    methods: ["POST", "GET"],
+    origin: ["https://taskloop-phi.vercel.app"], // Remove trailing slash
+    methods: ["POST", "GET", "PUT", "DELETE"], // Added PUT/DELETE for full CRUD
     credentials: true
 }));
 
@@ -34,17 +34,17 @@ app.use("/api/reports", reportRoutes);
 // Static uploads folder
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
+// Root endpoint
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
 
 // 2. EXPORT THE APP FOR VERCEL
-// Vercel needs 'module.exports = app' to run serverless.
-// We only run app.listen if we are NOT in production (or specifically locally).
-if (process.env.NODE_ENV !== 'production') {
+// Run app.listen only if not in production
+if (process.env.NODE_ENV !== "production") {
     const PORT = process.env.PORT || 5000;
     app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
+        console.log(`Server is running on port ${PORT}`);
     });
 }
 
