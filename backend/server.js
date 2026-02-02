@@ -13,7 +13,7 @@ const app = express();
 
 // 1. UPDATED CORS CONFIGURATION
 app.use(cors({
-  origin: ["http://localhost:5173"], 
+  origin: "https://taskloop-ivory.vercel.app", 
   credentials: true
 }));
 
