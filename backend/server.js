@@ -11,18 +11,23 @@ const reportRoutes = require("./routes/reportRoutes");
 
 const app = express();
 
-// Connect to Database
+// 1. UPDATED CORS CONFIGURATION
+// We use a function for origin to allow multiple origins (your deployed frontend + localhost)
+app.use(
+cors({
+    
+    origin: ["https://taskloop-phi.vercel.app", "http://localhost:5173", "http://localhost:3000"], 
+methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Added OPTIONS
+allowedHeaders: ["Content-Type", "Authorization"],
+credentials: true 
+})
+);
+
+// MongoDB connection
 connectDB();
 
-// Middlewares
+// Body parser
 app.use(express.json());
-
-// Improved CORS
-app.use(cors({
-    origin: ["https://taskloop-phi.vercel.app", "http://localhost:3000"], 
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    credentials: true
-}));
 
 // Routes
 app.use("/api/auth", authRoutes);
@@ -30,14 +35,20 @@ app.use("/api/users", userRoutes);
 app.use("/api/tasks", taskRoutes);
 app.use("/api/reports", reportRoutes);
 
-// Root Health Check
-app.get("/api/health", (req, res) => res.send("API working!"));
+// Static uploads folder
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// Export for Vercel
-module.exports = app;
+app.get("/", (req, res) => {
+res.send("API is running...");
+});
 
-// Only listen locally
-if (process.env.NODE_ENV !== "production") {
-    const PORT = process.env.PORT || 5000;
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// 2. EXPORT THE APP FOR VERCEL
+// Vercel needs 'module.exports = app' to run serverless.
+// We only run app.listen if we are NOT in production (or specifically locally).
+if (process.env.NODE_ENV !== 'production') {
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+console.log(`Server is running on port ${PORT}`);
+});
 }
+module.exports = app;
