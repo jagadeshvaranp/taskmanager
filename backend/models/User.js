@@ -11,5 +11,5 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// FIX OverwriteModelError
+
 module.exports = mongoose.models.User || mongoose.model("User", UserSchema);

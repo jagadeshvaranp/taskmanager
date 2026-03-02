@@ -1,10 +1,10 @@
-// ✅ CORRECT: Direct link to your deployed backend (No slash at the end)
+
 if (typeof process === 'undefined') {
   window.process = { env: {} };
 }
 export const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
-// Your paths remain the same (they already have the slash at the start)
+
 export const API_PATHS = {
   AUTH: {
     REGISTER: `${BASE_URL}/api/auth/register`,
