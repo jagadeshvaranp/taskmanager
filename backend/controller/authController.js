@@ -50,7 +50,6 @@ const registerUser = async (req, res) => {
       profileImageUrl: user.profileImageUrl,
       token: generateToken(user._id), // JWT
     });
-    res.json({ message: "Register API Working" });
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
   }
@@ -98,10 +97,10 @@ const getUserProfile = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "user not found" });
     }
+    res.json(user);
   } catch (err) {
-    res.status(500).json({ message: "server error", error: error.message });
+    res.status(500).json({ message: "server error", error: err.message });
   }
-  res.json(user);
 };
 
 //@desc update user profile

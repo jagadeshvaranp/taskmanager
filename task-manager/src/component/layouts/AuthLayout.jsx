@@ -9,7 +9,7 @@ function AuthLayout({ children }) {
         </div>
 
         <div className='hidden md:flex w-[40vw] h-screen' >
-            <img src={UI_IMG} alt=""  className=''/>
+            <img src={UI_IMG} alt=""  className='w-full h-full object-cover'/>
         </div>
     </div>
   )

@@ -13,7 +13,7 @@ const app = express();
 
 // 1. UPDATED CORS CONFIGURATION
 const corsOptions = {
-  origin: ["https://taskloop-ivory.vercel.app", "http://localhost:5173"], // No trailing slash here either!
+  origin: ["https://taskloop-ivory.vercel.app", "http://localhost:5173", "http://localhost:5174"], // No trailing slash here either!
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
   credentials: true,
 optionsSuccessStatus: 200// Some legacy browsers choke on 204
